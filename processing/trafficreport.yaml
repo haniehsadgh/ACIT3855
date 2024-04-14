@@ -1,0 +1,63 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API that receives traffic flow and incident reports
+  version: "1.0.0"
+  title: Simple Traffic Management API
+  contact:
+    email: hgholamhosseini@my.bcit.ca
+  license:
+    name: Apache 2.0
+    url: /
+tags:
+  - name: cameras
+    description: Operations for traffic cameras and monitoring devices
+  - name: developers
+    description: Operations available to regular developers
+  - name: admins
+    description: Operations available to administrators
+paths:
+  /stats:
+    get:
+      tags:
+        - cameras
+      summary: get the event stats
+      operationId: app.get_stats
+      description: get the number of events and simple static static analysis
+      responses:
+        "201":
+          description: record created
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Stats"
+        "400":
+          description: invalid request - could not create record
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    Stats:
+      required:
+        - max_vehicle_count
+        - num_traffic_report
+        - num_incident_report
+        - last_updated
+      properties:
+        max_vehicle_count:
+          type: integer
+        num_traffic_report:
+          type: integer
+        num_incident_report:
+          type: integer
+        last_updated:
+          type: string
+          format: date-time
+          example: '2023-02-21T09:12:33.001Z'

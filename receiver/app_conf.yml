@@ -1,0 +1,9 @@
+version: 1
+traffic_condition:
+  url: http://storage:8090/traffic-flow
+accident:
+  url: http://storage:8090/incident
+events:
+  hostname: acit3855-kafla.eastus2.cloudapp.azure.com
+  port: 9092
+  topic: events

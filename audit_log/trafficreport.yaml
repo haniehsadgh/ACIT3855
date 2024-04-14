@@ -1,0 +1,170 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API that provides audit info
+  version: "1.0.0"
+  title: Simple Traffic Management API
+  contact:
+    email: hgholamhosseini@my.bcit.ca
+  license:
+    name: Apache 2.0
+    url: /
+tags:
+  - name: cameras
+    description: Operations for traffic cameras and monitoring devices
+  - name: developers
+    description: Operations available to regular developers
+  - name: admins
+    description: Operations available to administrators
+paths:
+  /traffic-flow:
+    # post:
+    #   tags:
+    #     - cameras
+    #   summary: records traffic flow data
+    #   operationId: app.recordTrafficFlow
+    #   description: Adds a record for traffic flow data at a specific intersection
+    #   requestBody:
+    #     description: Record to add
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/TrafficFlowReading"
+    #   responses:
+    #     "201":
+    #       description: record created
+    #     "400":
+    #       description: invalid input, could not create record
+    get:
+      tags:
+       - sensors
+      summary: get new traffic info from history
+      operationId: app.get_traffic_reading
+      parameters:
+        - name: index
+          in: query
+          description: Gets the traffic reading with this index number in the event store
+          schema:
+            type: integer
+            example: 100
+      responses:
+        '200':
+          description: Successfully returned a traffic reading events
+          content: 
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref:  '#/components/schemas/TrafficFlowReading'
+        '400':
+          description: Invalid request
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /incident:
+    # post:
+    #   tags:
+    #     - cameras
+    #   summary: reports an incident
+    #   operationId: app.reportIncident
+    #   description: Adds a record for a reported incident captured by monitoring devices
+    #   requestBody:
+    #     description: Incident report to add
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/IncidentReport"
+    #   responses:
+    #     "201":
+    #       description: record created
+    #     "400":
+    #       description: invalid input, could not create record
+    get:
+      tags:
+       - sensors
+      summary: get an incident reading from history
+      operationId: app.get_incident_reading
+      parameters:
+        - name: index
+          in: query
+          description: get the incident reading at the index in the event store
+          schema:
+            type: integer
+            example: 100
+      responses:
+        '200':
+          description: Successfully returned incident reading event
+          content: 
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref:  '#/components/schemas/IncidentReport'
+                  # $ref:  '#/components/schemas/IncidentReading'
+        '400':
+          description: Invalid request
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string         
+components:
+  schemas:
+    TrafficFlowReading:
+      required:
+        - trace_id
+        - traffic_id
+        - intersectionId
+        - vehicleCount
+        - dateRecorded
+      properties:
+        trace_id:
+          type: string
+        traffic_id:
+          type: string
+          format: uuid
+        intersectionId:
+          type: string
+        dateRecorded:
+          type: string
+          format: date-time
+          example: '2023-02-21T09:12:33.001Z'
+        vehicleCount:
+          type: integer
+    IncidentReport:
+      required:
+        - trace_id
+        - accident_id
+        - cameraId
+        - timestamp
+        - incidentType
+      properties:
+        trace_id:
+          type: string
+        accident_id:
+          type: string
+          format: uuid
+        cameraId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          example: '2023-02-21T09:12:33.001Z'
+        incidentType:
+          type: string

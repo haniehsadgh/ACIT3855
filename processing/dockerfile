@@ -1,0 +1,40 @@
+# Use the official Python image from Docker Hub
+FROM python:latest
+
+LABEL maintainer="hgholamhosseini@my.bcit.ca"
+
+# Update the package manager and install Python and pip
+RUN apt-get update -y && apt-get install -y python3 python3-pip
+
+# Install required Python packages
+RUN pip3 install connexion \
+                    swagger-ui-bundle \
+                    APScheduler \
+                    sqlalchemy \
+                    pytz \
+                    starlette \
+		    Flask
+
+RUN pip install --upgrade connexion
+RUN pip install --no-cache-dir connexion[flask]
+RUN pip install uvicorn
+# Install SQLite3
+RUN apt-get update && apt-get install -y sqlite3
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your application files into the container
+COPY . /app
+
+# Run the database creation script
+#RUN python3 create_database.py
+
+# Check if the database file exists, if not, run create_database.py
+#RUN if [ ! -f "/data/stats.sqlite" ]; then python3 create_database.py; fi
+
+
+# Set the entrypoint and default command for the container
+ENTRYPOINT [ "python3" ]
+CMD ["app.py"]
+

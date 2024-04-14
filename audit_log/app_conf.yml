@@ -1,0 +1,17 @@
+datastore:
+  engine: mysql
+  user: user
+  password: Password
+  hostname: acit3855-kafla.eastus2.cloudapp.azure.com
+  port: 3306
+  database: events
+
+# version: 1
+# traffic_condition:
+#   url: http://localhost:8090/traffic-flow
+# accident:
+#   url: http://localhost:8090/incident
+events:
+  hostname: acit3855-kafla.eastus2.cloudapp.azure.com
+  port: 9092
+  topic: events

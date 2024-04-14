@@ -1,0 +1,95 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API that receives traffic flow and incident reports
+  version: "1.0.0"
+  title: Simple Traffic Management API
+  contact:
+    email: hgholamhosseini@my.bcit.ca
+  license:
+    name: Apache 2.0
+    url: /
+tags:
+  - name: cameras
+    description: Operations for traffic cameras and monitoring devices
+  - name: developers
+    description: Operations available to regular developers
+  - name: admins
+    description: Operations available to administrators
+paths:
+  /traffic-flow:
+    post:
+      tags:
+        - cameras
+      summary: records traffic flow data
+      operationId: app.recordTrafficFlow
+      description: Adds a record for traffic flow data at a specific intersection
+      requestBody:
+        description: Record to add
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrafficFlowReading"
+      responses:
+        "201":
+          description: record created
+        "400":
+          description: invalid input, could not create record
+
+  /incident:
+    post:
+      tags:
+        - cameras
+      summary: reports an incident
+      operationId: app.reportIncident
+      description: Adds a record for a reported incident captured by monitoring devices
+      requestBody:
+        description: Incident report to add
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncidentReport"
+      responses:
+        "201":
+          description: record created
+        "400":
+          description: invalid input, could not create record
+
+components:
+  schemas:
+    TrafficFlowReading:
+      required:
+        - traffic_id
+        - intersectionId
+        - vehicleCount
+        - dateRecorded
+      properties:
+        traffic_id:
+          type: string
+          format: uuid
+        intersectionId:
+          type: string
+        dateRecorded:
+          type: string
+          format: date-time
+          example: '2023-02-21T09:12:33.001Z'
+        vehicleCount:
+          type: integer
+    IncidentReport:
+      required:
+        - accident_id
+        - cameraId
+        - timestamp
+        - incidentType
+      properties:
+        accident_id:
+          type: string
+          format: uuid
+        cameraId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          example: '2023-02-21T09:12:33.001Z'
+        incidentType:
+          type: string
